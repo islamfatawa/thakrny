@@ -6,7 +6,6 @@
 
 <title>البحث الصوتي في القرآن</title>
 
-<!-- خط عربي ممتاز -->
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&display=swap" rel="stylesheet">
 
 <style>
@@ -19,15 +18,15 @@ body {
 }
 
 h2 {
-  font-size: 36px;
+  font-size: 26px;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 button {
   width: 100%;
   padding: 22px;
-  font-size: 32px;
+  font-size: 30px;
   margin-top: 20px;
   background: #3b82f6;
   color: white;
@@ -57,6 +56,23 @@ button:active {
   box-shadow: 0 3px 15px rgba(0,0,0,0.1);
 }
 
+.nav-buttons {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+}
+
+.nav-buttons button {
+  flex: 1;
+  font-size: 28px;
+  padding: 18px;
+  background: #10b981;
+}
+
+.nav-buttons button:active {
+  background: #059669;
+}
+
 #info {
   margin-top: 10px;
   font-size: 24px;
@@ -75,10 +91,18 @@ button:active {
 <div id="heard"></div>
 <div id="result"></div>
 
+<!-- أزرار التنقل -->
+<div class="nav-buttons">
+  <button id="prev">⬅ الآية السابقة</button>
+  <button id="next">➡ الآية التالية</button>
+</div>
+
 <script src="quran.js"></script>
 
 <script>
 let quran = QURAN;
+let currentIndex = -1;
+
 document.getElementById("info").textContent = "عدد الآيات المحمّلة: " + quran.length;
 
 function N(t){
@@ -149,22 +173,25 @@ function score(v,a){
 
 function findAya(text){
   let best=null, bestScore=-1;
-  for(let a of quran){
+  for(let i=0;i<quran.length;i++){
+    let a=quran[i];
     let sc = score(text,a.textNoTashkeel);
     if(sc>bestScore){
-      bestScore=sc; 
+      bestScore=sc;
       best=a;
+      currentIndex = i;
     }
   }
   if(bestScore < 20) return null;
   return best;
 }
 
-const btn=document.getElementById("btn");
-const heard=document.getElementById("heard");
-const result=document.getElementById("result");
+function showAya(a){
+  document.getElementById("result").innerHTML =
+    "<b>"+a.surah+" - آية "+a.aya+"</b><br><br>"+a.textTashkeel;
+}
 
-btn.onclick=()=>{
+document.getElementById("btn").onclick=()=>{
   if(!("webkitSpeechRecognition" in window)){
     alert("المتصفح لا يدعم التعرف على الصوت");
     return;
@@ -177,16 +204,26 @@ btn.onclick=()=>{
     let text=e.results[0][0].transcript;
     heard.innerHTML="🔊 النص المسموع:<br><b>"+text+"</b>";
     let aya=findAya(text);
-    if(aya){
-      result.innerHTML=
-      "<b>"+aya.surah+" - آية "+aya.aya+"</b><br><br>"+aya.textTashkeel;
-    }else{
-      result.innerHTML="❌ لم يتم العثور على آية مطابقة";
-    }
+    if(aya) showAya(aya);
+    else document.getElementById("result").innerHTML="❌ لم يتم العثور على آية مطابقة";
   };
 
   r.onerror=()=>alert("خطأ في الصوت");
   r.start();
+};
+
+document.getElementById("prev").onclick = ()=>{
+  if(currentIndex > 0){
+    currentIndex--;
+    showAya(quran[currentIndex]);
+  }
+};
+
+document.getElementById("next").onclick = ()=>{
+  if(currentIndex < quran.length-1){
+    currentIndex++;
+    showAya(quran[currentIndex]);
+  }
 };
 </script>
 
