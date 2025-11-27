@@ -55,7 +55,7 @@ button:active {
 #result {
   margin-top: 40px;
   font-size: 36px;
-  line-height: 2.5;
+  line-height:  1.5;
   background: #ffffff;
   padding: 25px;
   border-radius: 14px;
@@ -87,15 +87,16 @@ button:active {
   color: #666;
   font-family: "Naskh";
 }
-</style>
 
+</style>
 </head>
 
 <body>
 
-<h2>🎤 البحث الصوتي في القرآن</h2>
+
+
 <div id="info"></div>
-<button id="btn">🎙 اضغط للتسجيل</button>
+<button id="btn">🎙  للبحث الصوتي في القرآن </button>
 
 <div id="heard"></div>
 <div id="result"></div>
@@ -112,7 +113,7 @@ button:active {
 let quran = QURAN;
 let currentIndex = -1;
 
-document.getElementById("info").textContent = "عدد الآيات المحمّلة: " + quran.length;
+document.getElementById("info").textContent = "عدد ايات القرآن المحمّلة: " + quran.length;
 
 function N(t){
   return t.replace(/[ًٌٍَُِّْـ]/g,"")
