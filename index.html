@@ -164,12 +164,16 @@ function score_line(v,a){
   return (m/Math.max(v.length,1))*20;
 }
 
-function score(v,a){
-  return score_words(v,a)
-    + score_sequence(v,a)
-    + score_suffix(v,a)
-    + score_line(v,a);
+function score(v, a) {
+  const s1 = score_words(v, a);       // الكلمات المتشابهة
+  const s2 = score_sequence(v, a);    // الكلمات المتتابعة
+  const s3 = score_suffix(v, a);      // نهاية مشابهة
+  const s4 = score_line(v, a);        // تشابه عام للحروف
+  const s5 = score_chunks(v, a);      // NEW — مطابقة سلاسل 2–3 كلمات
+
+  return s1 + s2 + s3 + s4 + s5;
 }
+
 
 function findAya(text){
   let best=null, bestScore=-1;
