@@ -176,6 +176,19 @@ function score(v, a) {
 
 
 function findAya(text){
+  let query = N(text);
+
+  // 1) مطابقة مقاطع حرفية قوية
+  for (let a of quran){
+    let clean = N(a.textNoTashkeel);
+
+    if (clean.includes(query) && query.length > 7) {
+      currentIndex = a.id - 1;
+      return a;
+    }
+  }
+
+  // 2) إذا لم توجد مطابقة مباشرة → استخدم النظام القديم
   let best=null, bestScore=-1;
   for(let i=0;i<quran.length;i++){
     let a=quran[i];
@@ -186,9 +199,11 @@ function findAya(text){
       currentIndex = i;
     }
   }
+
   if(bestScore < 20) return null;
   return best;
 }
+
 
 function showAya(a){
   document.getElementById("result").innerHTML =
